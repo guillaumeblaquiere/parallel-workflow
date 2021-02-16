@@ -1,0 +1,18 @@
+main:
+  params: [args]
+  steps:
+  - callSleepyApp:
+      call: http.get
+      args:
+        url: https://sleepy-app-fqffbf2xsq-uc.a.run.app
+        query:
+          w: ${args.wait}
+        timeout: 1800
+      result: result
+  - logStep:
+      call: sys.log
+      args:
+        text: ${result}
+        severity: INFO
+  - returnOutput:
+      return: ${result}

@@ -1,0 +1,15 @@
+main:
+  steps:
+  - parallel-executor:
+      call: experimental.executions.map
+      args:
+        workflow_id: run-long-process
+        arguments: [{"wait":5},{"wait":10},{"wait":15}]
+      result: result
+  - logStep:
+      call: sys.log
+      args:
+        text: ${result}
+        severity: INFO
+  - returnOutput:
+      return: ${result}
