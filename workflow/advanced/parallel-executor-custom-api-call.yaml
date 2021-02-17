@@ -1,0 +1,15 @@
+main:
+  steps:
+  - parallel-executor:
+      call: experimental.executions.map
+      args:
+        workflow_id: custom-api-call
+        arguments: [{"url":"<SLEEPY-APP URL>","query":{"w":5}},{"url":"https://www.google.com"}]
+      result: result
+  - logStep:
+      call: sys.log
+      args:
+        text: ${result}
+        severity: INFO
+  - returnOutput:
+      return: ${result}

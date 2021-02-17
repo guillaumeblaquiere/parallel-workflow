@@ -1,0 +1,16 @@
+main:
+  params: [args]
+  steps:
+  - callCustomWorkflow:
+      call: experimental.executions.run
+      args:
+        workflow_id: ${args.workflow}
+        argument: ${args.argument}
+      result: result
+  - logStep:
+      call: sys.log
+      args:
+        text: ${result}
+        severity: INFO
+  - returnOutput:
+      return: ${result}

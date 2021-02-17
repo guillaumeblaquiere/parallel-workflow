@@ -4,7 +4,7 @@ main:
   - callSleepyApp:
       call: http.get
       args:
-        url: https://sleepy-app-fqffbf2xsq-uc.a.run.app
+        url: <SLEEPY-APP URL>
         query:
           w: ${args.wait}
         timeout: 1800

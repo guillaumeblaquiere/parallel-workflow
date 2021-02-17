@@ -65,6 +65,80 @@ the time duration between the `startTime` and the `endTime`
 
 *Feb 2021: the performance aren't so good, but there is a beginning of parallelization. It's yet experimental!*
 
+# Advanced workflow
+
+To bypass the current limitation, you can use these advance workflows.
+
+## Custom API call
+
+If you want to call different URL in the execution map, you can create a wrapper workflow for this. 
+*It's simply an example, you can set the HTTP verb and others part (body) also dynamic and pass in the body*
+
+**Remarks**
+
+If you want to omit some parameter, you need to test them before and set a value (null or not). The `prepareQuery` step
+is a good example on this
+
+### Deploy the callable workflow
+
+```shell
+gcloud workflows deploy --source=workflow/advanced/custom-api-call.yaml custom-api-call
+```
+And test it
+```shell
+gcloud workflows execute --data='{"url":"https://sleepy-app-fqffbf2xsq-uc.a.run.app","query":{"w":5}}' custom-api-call
+
+#Validate that the query param omission isn't a problem
+gcloud workflows execute --data='{"url":"https://sleepy-app-fqffbf2xsq-uc.a.run.app"}' custom-api-call
+```
+
+### Deploy the execution map for custom API calls
+
+Example of use, with static call
+
+* Replace the `<SLEEPY-APP URL>` placeholder by the URL of your Cloud Run sleepy-app got at the first step.
+
+```shell
+gcloud workflows deploy --source=workflow/advanced/parallel-executor-custom-api-call.yaml parallel-executor-custom-api-call
+```
+
+Test it
+```shell
+gcloud workflows execute parallel-executor-custom-api-call
+```
+
+## Custom Workflow invocation
+
+To have the capacity to invoke different workflow ID in the execution map, you need to wrap the call to a workflow
+in another workflow. It's not very clean, but it's the current workaround to gain flexibility.
+
+### Deploy the callable workflow
+
+```shell
+gcloud workflows deploy --source=workflow/advanced/custom-workflow.yaml custom-workflow
+```
+
+And test it
+
+```shell
+gcloud workflows execute --data='{"workflow":"run-long-process","argument":{"wait":5}}' custom-workflow
+```
+
+### Deploy the execution map for custom workflows
+
+Example of use, with static call.
+
+* Replace the `<SLEEPY-APP URL>` placeholder by the URL of your Cloud Run sleepy-app got at the first step.
+
+```shell
+gcloud workflows deploy --source=workflow/advanced/parallel-executor-custom-workflow.yaml parallel-executor-custom-workflow
+```
+
+Test it
+```shell
+gcloud workflows execute parallel-executor-custom-workflow
+```
+
 # License
 
 This library is licensed under Apache 2.0. Full license text is available in

@@ -1,0 +1,15 @@
+main:
+  steps:
+  - parallel-executor:
+      call: experimental.executions.map
+      args:
+        workflow_id: custom-workflow
+        arguments: [{"workflow":"run-long-process","argument":{"wait":5}},{"workflow":"custom-api-call","argument":{"url":"<SLEEPY-APP URL>","query":{"w":5}}}]
+      result: result
+  - logStep:
+      call: sys.log
+      args:
+        text: ${result}
+        severity: INFO
+  - returnOutput:
+      return: ${result}

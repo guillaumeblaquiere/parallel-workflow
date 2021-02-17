@@ -1,0 +1,25 @@
+main:
+  params: [args]
+  steps:
+  - prepareQuery:
+      switch:
+        - condition: ${"query" in args}
+          assign:
+            - query: ${args.query}
+        - condition: true
+          assign:
+            - query: null
+  - callCustomUrl:
+      call: http.get
+      args:
+        url: ${args.url}
+        query: ${query}
+        timeout: 1800
+      result: result
+  - logStep:
+      call: sys.log
+      args:
+        text: ${result}
+        severity: INFO
+  - returnOutput:
+      return: ${result}
